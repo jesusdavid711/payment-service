@@ -18,24 +18,24 @@ import jakarta.validation.constraints.Positive;
 public class CreatePaymentRequest {
 
     @NotBlank(message = "Reference is required")
-    @Schema(description = "Unique payment reference", example = "PAY-2024-001")
+    @Schema(description = "Unique payment reference", examples = { "PAY-2024-001" })
     private String reference;
 
     @NotBlank(message = "Customer ID is required")
-    @Schema(description = "Customer identifier", example = "CUST-12345")
+    @Schema(description = "Customer identifier", examples = { "CUST-12345" })
     private String customerId;
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be greater than zero")
-    @Schema(description = "Payment amount (must be positive)", example = "150000.00")
+    @Schema(description = "Payment amount (must be positive)", examples = { "150000.00" })
     private BigDecimal amount;
 
     @NotNull(message = "Currency is required")
-    @Schema(description = "Payment currency", example = "COP")
+    @Schema(description = "Payment currency", examples = { "COP" })
     private Currency currency;
 
     @NotNull(message = "Payment method is required")
-    @Schema(description = "Payment method", example = "CARD")
+    @Schema(description = "Payment method", examples = { "CARD" })
     private PaymentMethod method;
 
     // Getters and Setters

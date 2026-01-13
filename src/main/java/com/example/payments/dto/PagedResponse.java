@@ -13,16 +13,16 @@ public class PagedResponse<T> {
     @Schema(description = "List of items in the current page")
     private List<T> content;
 
-    @Schema(description = "Current page number (0-indexed)", example = "0")
+    @Schema(description = "Current page number (0-indexed)", examples = { "0" })
     private int page;
 
-    @Schema(description = "Page size", example = "10")
+    @Schema(description = "Page size", examples = { "10" })
     private int size;
 
-    @Schema(description = "Total number of elements", example = "100")
+    @Schema(description = "Total number of elements", examples = { "100" })
     private long totalElements;
 
-    @Schema(description = "Total number of pages", example = "10")
+    @Schema(description = "Total number of pages", examples = { "10" })
     private int totalPages;
 
     public PagedResponse() {

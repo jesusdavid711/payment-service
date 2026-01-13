@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public class UpdateStatusRequest {
 
     @NotNull(message = "Status is required")
-    @Schema(description = "New payment status (APPROVED or REJECTED)", example = "APPROVED")
+    @Schema(description = "New payment status (APPROVED or REJECTED)", examples = { "APPROVED" })
     private PaymentStatus status;
 
     public UpdateStatusRequest() {

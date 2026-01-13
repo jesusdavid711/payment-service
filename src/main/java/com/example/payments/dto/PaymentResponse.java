@@ -16,25 +16,25 @@ import com.example.payments.domain.PaymentStatus;
 @Schema(description = "Payment response data")
 public class PaymentResponse {
 
-    @Schema(description = "Payment ID", example = "1")
+    @Schema(description = "Payment ID", examples = { "1" })
     private Long id;
 
-    @Schema(description = "Unique payment reference", example = "PAY-2024-001")
+    @Schema(description = "Unique payment reference", examples = { "PAY-2024-001" })
     private String reference;
 
-    @Schema(description = "Customer identifier", example = "CUST-12345")
+    @Schema(description = "Customer identifier", examples = { "CUST-12345" })
     private String customerId;
 
-    @Schema(description = "Payment amount", example = "150000.00")
+    @Schema(description = "Payment amount", examples = { "150000.00" })
     private BigDecimal amount;
 
-    @Schema(description = "Payment currency", example = "COP")
+    @Schema(description = "Payment currency", examples = { "COP" })
     private Currency currency;
 
-    @Schema(description = "Payment method", example = "CARD")
+    @Schema(description = "Payment method", examples = { "CARD" })
     private PaymentMethod method;
 
-    @Schema(description = "Payment status", example = "PENDING")
+    @Schema(description = "Payment status", examples = { "PENDING" })
     private PaymentStatus status;
 
     @Schema(description = "Payment creation timestamp")
