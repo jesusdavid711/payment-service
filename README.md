@@ -1,79 +1,81 @@
-# payment-service
+# Payment Management Microservice
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Microservicio de gestión de pagos construido con **Quarkus**, siguiendo una **arquitectura hexagonal** (puertos y adaptadores).
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## 🚀 Cómo correr el proyecto
 
-## Running the application in dev mode
+### Requisitos
+- Java 21
+- Docker y Docker Compose
+- Maven (incluido `./mvnw`)
 
-You can run your application in dev mode that enables live coding using:
+### 1. Levantar la Infraestructura (Base de Datos)
+El proyecto incluye un `docker-compose.yml` para facilitar la ejecución.
+```bash
+docker-compose up -d
+```
+Esto levantará:
+- **PostgreSQL**: Puerto `5434` (para no entrar en conflicto con instalaciones locales en el 5432).
+- **Adminer (opcional)**: Interfaz web para DB en el puerto `8080`.
 
-```shell script
+### 2. Ejecutar la Aplicación
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## ⚙️ Variables de Entorno y Configuración
+Puedes configurar la aplicación a través de `src/main/resources/application.properties` o variables de entorno:
 
-## Packaging and running the application
+| Propiedad | Variable de Entorno | Valor por Defecto |
+|-----------|----------------------|-------------------|
+| URL JDBC | `QUARKUS_DATASOURCE_JDBC_URL` | `jdbc:postgresql://localhost:5434/payments` |
+| Usuario DB| `QUARKUS_DATASOURCE_USERNAME` | `postgres` |
+| Clave DB  | `QUARKUS_DATASOURCE_PASSWORD` | `secret` |
 
-The application can be packaged using:
+## 🛠️ Arquitectura
+El proyecto utiliza **Hexagonal Architecture**:
+- **Domain**: Entidades, Enums y lógica pura de negocio (transiciones de estado).
+- **Application**: Puertos (interfaces) y servicios que coordinan los casos de uso.
+- **Infrastructure**: Adaptadores REST (controllers) y persistencia (Panache con Flyway).
 
-```shell script
-./mvnw package
+## 📖 Documentación de la API (Swagger)
+Una vez iniciada la app, accede a:
+👉 [http://localhost:8080/q/swagger-ui](http://localhost:8080/q/swagger-ui)
+
+## 📡 Ejemplos de Pruebas (curl)
+
+### 1. Registrar un Pago
+```bash
+curl -X POST http://localhost:8080/api/payments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reference": "PAY-100",
+    "customerId": "CUST-001",
+    "amount": 25000.00,
+    "currency": "COP",
+    "method": "CARD"
+  }'
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+### 2. Consultar Pago por ID
+```bash
+curl http://localhost:8080/api/payments/1
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+### 3. Consultar con Filtros y Paginación
+```bash
+curl "http://localhost:8080/api/payments?status=PENDING&page=0&size=5"
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+### 4. Cambiar Estado (Ej: Aprobar)
+```bash
+curl -X PATCH http://localhost:8080/api/payments/1/status \
+  -H "Content-Type: application/json" \
+  -d '{"status": "APPROVED"}'
 ```
 
-You can then execute your native executable with: `./target/payment-service-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- Flyway ([guide](https://quarkus.io/guides/flyway)): Handle your database schema migrations
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+## 🧪 Pruebas
+Ejecutar todos los tests (Unitarios e Integración):
+```bash
+./mvnw test
+```

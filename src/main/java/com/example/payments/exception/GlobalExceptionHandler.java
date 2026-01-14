@@ -22,18 +22,16 @@ public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
-        String path = uriInfo != null ? uriInfo.getPath() : "";
-
         if (exception instanceof PaymentNotFoundException) {
-            return buildResponse(Response.Status.NOT_FOUND, "Not Found", exception.getMessage(), path);
+            return buildResponse(Response.Status.NOT_FOUND, "PAYMENT_NOT_FOUND", exception.getMessage());
         }
 
         if (exception instanceof DuplicateReferenceException) {
-            return buildResponse(Response.Status.CONFLICT, "Conflict", exception.getMessage(), path);
+            return buildResponse(Response.Status.CONFLICT, "DUPLICATE_REFERENCE", exception.getMessage());
         }
 
         if (exception instanceof InvalidStatusTransitionException) {
-            return buildResponse(Response.Status.CONFLICT, "Conflict", exception.getMessage(), path);
+            return buildResponse(Response.Status.CONFLICT, "INVALID_STATUS_TRANSITION", exception.getMessage());
         }
 
         if (exception instanceof ConstraintViolationException) {
@@ -41,23 +39,18 @@ public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
             String message = cve.getConstraintViolations().stream()
                     .map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", "));
-            return buildResponse(Response.Status.BAD_REQUEST, "Validation Error", message, path);
+            return buildResponse(Response.Status.BAD_REQUEST, "VALIDATION_ERROR", message);
         }
 
         // Generic internal server error
         return buildResponse(
                 Response.Status.INTERNAL_SERVER_ERROR,
-                "Internal Server Error",
-                exception.getMessage(),
-                path);
+                "INTERNAL_SERVER_ERROR",
+                exception.getMessage());
     }
 
-    private Response buildResponse(Response.Status status, String error, String message, String path) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                status.getStatusCode(),
-                error,
-                message,
-                path);
+    private Response buildResponse(Response.Status status, String code, String message) {
+        ErrorResponse errorResponse = new ErrorResponse(code, message);
         return Response.status(status).entity(errorResponse).build();
     }
 }

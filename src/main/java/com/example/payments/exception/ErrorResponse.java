@@ -4,51 +4,32 @@ import java.time.LocalDateTime;
 
 /**
  * Standard error response format for all API errors.
+ * Strictly follows the suggested format: {code, message, timestamp}
  */
 public class ErrorResponse {
 
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
+    private String code;
     private String message;
-    private String path;
+    private LocalDateTime timestamp;
 
     public ErrorResponse() {
         this.timestamp = LocalDateTime.now();
     }
 
-    public ErrorResponse(int status, String error, String message, String path) {
+    public ErrorResponse(String code, String message) {
         this();
-        this.status = status;
-        this.error = error;
+        this.code = code;
         this.message = message;
-        this.path = path;
     }
 
     // Getters and Setters
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getCode() {
+        return code;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getMessage() {
@@ -59,11 +40,11 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public String getPath() {
-        return path;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

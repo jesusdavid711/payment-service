@@ -119,6 +119,7 @@ class PaymentResourceIT {
                 .post("/api/payments")
                 .then()
                 .statusCode(409)
+                .body("code", equalTo("DUPLICATE_REFERENCE"))
                 .body("message", containsString("already exists"));
     }
 
@@ -145,6 +146,7 @@ class PaymentResourceIT {
                 .get("/api/payments/{id}", 99999)
                 .then()
                 .statusCode(404)
+                .body("code", equalTo("PAYMENT_NOT_FOUND"))
                 .body("message", containsString("not found"));
     }
 
@@ -218,6 +220,7 @@ class PaymentResourceIT {
                 .patch("/api/payments/{id}/status", createdPaymentId)
                 .then()
                 .statusCode(409)
+                .body("code", equalTo("INVALID_STATUS_TRANSITION"))
                 .body("message", containsString("Cannot transition"));
     }
 
@@ -237,6 +240,7 @@ class PaymentResourceIT {
                 .when()
                 .patch("/api/payments/{id}/status", 99999)
                 .then()
-                .statusCode(404);
+                .statusCode(404)
+                .body("code", equalTo("PAYMENT_NOT_FOUND"));
     }
 }
